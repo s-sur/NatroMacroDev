@@ -2204,10 +2204,13 @@ A_TrayMenu.Default := "Start Macro"
 ; GUI SKINNING
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;https://www.autohotkey.com/boards/viewtopic.php?f=6&t=5841&hilit=gui+skin
-DllCall(DllCall("GetProcAddress"
-		, "Ptr",DllCall("LoadLibrary", "Str",A_WorkingDir "\nm_image_assets\Styles\USkin.dll")
-		, "AStr","USkinInit", "Ptr")
-	, "Int",0, "Int",0, "AStr",A_WorkingDir "\nm_image_assets\styles\" GuiTheme ".msstyles")
+if(GuiTheme != "Win32")
+{
+	DllCall(DllCall("GetProcAddress"
+			, "Ptr",DllCall("LoadLibrary", "Str",A_WorkingDir "\nm_image_assets\Styles\USkin.dll")
+			, "AStr","USkinInit", "Ptr")
+		, "Int",0, "Int",0, "AStr",A_WorkingDir "\nm_image_assets\styles\" GuiTheme ".msstyles")
+}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; DEFAULT ROBLOX TYPE/PATH DETECTION
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2559,7 +2562,7 @@ nm_MajorUpdateHelp(*)
 OnExit(GetOut)
 MainGui := Gui((AlwaysOnTop ? "+AlwaysOnTop " : "") "+Border +OwnDialogs", "Natro Macro (Loading 0%)")
 WinSetTransparent 255-floor(GuiTransparency*2.55), MainGui
-MainGui.Show("x" GuiX " y" GuiY " w490 h275")
+MainGui.Show("x" GuiX " y" GuiY (GuiTheme = "Win32" ? " w500 h285" : " w490 h275"))
 SetLoadingProgress(percent) => MainGui.Title := "Natro Macro (Loading " Round(percent) "%)"
 MainGui.OnEvent("Close", (*) => ExitApp())
 MainGui.SetFont("s8 cDefault Norm", "Tahoma")
@@ -2864,6 +2867,7 @@ MainGui.Add("Text", "x10 y40 w70 +BackgroundTrans", "GUI Theme:")
 StylesList := []
 Loop Files A_WorkingDir "\nm_image_assets\Styles\*.msstyles"
 	StylesList.Push(StrReplace(A_LoopFileName, ".msstyles"))
+StylesList.Push("Win32")
 (GuiCtrl := MainGui.Add("DropDownList", "x75 y34 w72 h100 vGuiTheme Disabled", StylesList)).Text := GuiTheme, GuiCtrl.OnEvent("Change", nm_guiThemeSelect)
 MainGui.Add("Text", "x10 y57 w100 +BackgroundTrans", "GUI Transparency:")
 MainGui.Add("Text", "x104 y57 w20 +Center +BackgroundTrans vGuiTransparency", GuiTransparency)
@@ -23542,7 +23546,8 @@ getout(*){
 	try IniWrite !!WinExist("PlanterTimers.ahk ahk_class AutoHotkey"), "settings\nm_config.ini", "Planters", "TimersOpen"
 	CloseScripts()
 	try Gdip_Shutdown(pToken)
-	DllCall(A_WorkingDir "\nm_image_assets\Styles\USkin.dll\USkinExit")
+	if (GuiTheme != "Win32")
+		DllCall(A_WorkingDir "\nm_image_assets\Styles\USkin.dll\USkinExit")
 }
 
 Background(){
