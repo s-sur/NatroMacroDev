@@ -2864,10 +2864,9 @@ MainGui.SetFont("s8 cDefault Norm", "Tahoma")
 ;gui settings
 MainGui.Add("CheckBox", "x10 y73 Disabled vAlwaysOnTop Checked" AlwaysOnTop, "Always On Top").OnEvent("Click", nm_AlwaysOnTop)
 MainGui.Add("Text", "x10 y40 w70 +BackgroundTrans", "GUI Theme:")
-StylesList := []
+StylesList := ["Win32"]
 Loop Files A_WorkingDir "\nm_image_assets\Styles\*.msstyles"
 	StylesList.Push(StrReplace(A_LoopFileName, ".msstyles"))
-StylesList.Push("Win32")
 (GuiCtrl := MainGui.Add("DropDownList", "x75 y34 w72 h100 vGuiTheme Disabled", StylesList)).Text := GuiTheme, GuiCtrl.OnEvent("Change", nm_guiThemeSelect)
 MainGui.Add("Text", "x10 y57 w100 +BackgroundTrans", "GUI Transparency:")
 MainGui.Add("Text", "x104 y57 w20 +Center +BackgroundTrans vGuiTransparency", GuiTransparency)
