@@ -52,7 +52,8 @@ RunWith32() {
 		ExitApp
 	}
 }
-RunWith32()
+if (IniRead("settings\nm_config.ini", "Settings", "GuiTheme", "") != "Win32")
+	RunWith32()
 
 ReloadScript(ahkpath) {
 	static cmd := DllCall("GetCommandLine", "Str"), params := DllCall("shlwapi\PathGetArgs","Str",cmd,"Str")
